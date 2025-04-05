@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!-- 最新Canvasから反映されたHTML -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ぼくのぴんちずかん</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@2.0.0"></script>
+  <style>
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff8f0;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.4em;
+      color: #d77;
+      margin: 0.5em 0 1em;
+    }
+    .grid-table {
+      margin-top: 30px;
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.2em;
+    }
+    .grid-table td, .grid-table th {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 6px;
+    }
+    #noteInput {
+      width: 100%;
+      font-size: 1em;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+    #noteDisplay {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.8em;
+      color: #444;
+      font-weight: bold;
+    }
+    select {
+      font-size: 1em;
+      padding: 4px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ぼくのぴんちずかん</h1>
+  <canvas id="pinchChart" width="400" height="400"></canvas>
+  <div id="noteDisplay"></div>
+  <input id="noteInput" type="text" placeholder="なにがおきた？ ここに入力してね" />
+  <table class="grid-table" id="valueTable">
+    <tr>
+      <th>ドキドキ 😰</th>
+      <th>つらい 😢</th>
+      <th>ふあん 😟</th>
+      <th>はずかしい 😳</th>
+      <th>きもちわるい 🤢</th>
+      <th>イライラ 😤</th>
+    </tr>
+    <tr id="valueRow">
+      <td>0.0<br><select id="sel0"></select></td>
+      <td>0.0<br><select id="sel1"></select></td>
+      <td>0.0<br><select id="sel2"></select></td>
+      <td>0.0<br><select id="sel3"></select></td>
+      <td>0.0<br><select id="sel4"></select></td>
+      <td>0.0<br><select id="sel5"></select></td>
+    </tr>
+  </table>
+
+  <script>
+    window.onload = function () {
+      const emotions = [
+        "ドキドキ 😰",
+        "つらい 😢",
+        "ふあん 😟",
+        "はずかしい 😳",
+        "きもちわるい 🤢",
+        "イライラ 😤"
+      ];
+      let values = [1, 1, 1, 1, 1, 1];
+
+      const ctx = document.getElementById("pinchChart").getContext("2d");
+      const chart = new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: emotions.map((e, i) => `${e}: 0.0`),
+          datasets: [{
+            label: "ぴんち度",
+            data: values,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 1,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointBackgroundColor: "#ff6384"
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              enabled: false
+            },
+            dragData: {
+              round: 1,
+              showTooltip: false,
+              onDragEnd: (e, datasetIndex, index, value) => {
+                values[index] = value;
+                updateAll();
+              }
+            }
+          },
+          scales: {
+            r: {
+              min: 0,
+              max: 11,
+              suggestedMax: 11,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                display: false
+              },
+              pointLabels: {
+                callback: function(_, index) {
+                  return `${emotions[index]}: ${parseFloat(values[index] - 1).toFixed(1)}`;
+                },
+                centerPointLabels: false,
+                font: {
+                  size: 14
+                },
+                padding: 10
+              }
+            }
+          },
+          animation: {
+            duration: 300
+          }
+        }
+      });
+
+      function updateAll() {
+        const row = document.getElementById("valueRow");
+        values.forEach((val, i) => {
+          const displayValue = (val - 1).toFixed(1);
+          row.children[i].innerHTML = `${displayValue}<br>`;
+          const select = document.createElement("select");
+          select.id = `sel${i}`;
+          for (let j = 0; j <= 100; j++) {
+            const option = document.createElement("option");
+            option.value = j;
+            option.textContent = j;
+            select.appendChild(option);
+          }
+          select.value = Math.round(val - 1);
+          select.addEventListener("change", (e) => {
+            const newValue = Number(e.target.value) + 1;
+            values[i] = newValue;
+            updateAll();
+          });
+          row.children[i].appendChild(select);
+          chart.data.labels[i] = `${emotions[i]}: ${displayValue}`;
+        });
+        chart.update();
+      }
+
+      updateAll();
+
+      document.getElementById("noteInput").addEventListener("input", (e) => {
+        document.getElementById("noteDisplay").textContent = e.target.value;
+      });
+    };
+  </script>
+</body>
+</html>
