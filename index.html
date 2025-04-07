@@ -219,35 +219,40 @@
             row.children[i].appendChild(select);
             chart.data.labels[i] = `${emotionLabels[i]}: ${display}`;
           });
-            const sum = values.reduce((a, b) => a + b, 0) - values.length;
-            const avg = (sum / values.length).toFixed(1);
-            let levelEl;
+          const sum = values.reduce((a, b) => a + b, 0) - values.length;
+          const avg = (sum / values.length).toFixed(1);
+          let levelEl;
 
-            if (canvasId === "pinchChart") {
-              levelEl = document.getElementById("pinchLevelDisplay");
-              if (!levelEl) {
-                levelEl = document.createElement("div");
-                levelEl.id = "pinchLevelDisplay";
-                levelEl.className = "note-display";
-                levelEl.style.fontSize = "1em";
-                levelEl.style.color = "#333";
-                document.getElementById("pinchChart").after(levelEl);
-              }
-              levelEl.textContent = `ぴんちポイント：${sum}　ぴんちレベル：${avg}`;
-            }
+          const baseStyle = {
+            fontSize: "0.9em",
+            color: "#666",
+            fontWeight: "normal",
+            fontFamily: "'Hiragino Kaku Gothic ProN', 'YuGothic', sans-serif"
+           };
 
-            if (canvasId === "happyChart") {
-              levelEl = document.getElementById("happyLevelDisplay");
-              if (!levelEl) {
-                levelEl = document.createElement("div");
-                levelEl.id = "happyLevelDisplay";
-                levelEl.className = "note-display";
-                levelEl.style.fontSize = "1em";
-                levelEl.style.color = "#333";
-                document.getElementById("happyChart").after(levelEl);
+          if (canvasId === "pinchChart") {
+             levelEl = document.getElementById("pinchLevelDisplay");
+             if (!levelEl) {
+              levelEl = document.createElement("div");
+              levelEl.id = "pinchLevelDisplay";
+              levelEl.className = "note-display";
+              document.getElementById("pinchChart").after(levelEl);
+             }
+            levelEl.textContent = `ぴんちポイント：${sum}　ぴんちレベル：${avg}`;
+            Object.assign(levelEl.style, baseStyle);
+          }
+
+          if (canvasId === "happyChart") {
+            levelEl = document.getElementById("happyLevelDisplay");
+            if (!levelEl) {
+              levelEl = document.createElement("div");
+              levelEl.id = "happyLevelDisplay";
+              levelEl.className = "note-display";
+              document.getElementById("happyChart").after(levelEl);
               }
-               levelEl.textContent = `うれしポイント：${sum}　うれしレベル：${avg}`;
-            }
+            levelEl.textContent = `うれしポイント：${sum}　うれしレベル：${avg}`;
+            Object.assign(levelEl.style, baseStyle);
+          }
           chart.update();
         }
 
