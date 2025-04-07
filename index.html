@@ -238,7 +238,7 @@
               levelEl.className = "note-display";
               document.getElementById("pinchChart").after(levelEl);
              }
-            levelEl.textContent = `ぴんちポイント：${sum}　ぴんちレベル：${avg}`;
+            levelEl.textContent = `ぴんちポイント：${Math.round(sum)}　ぴんちレベル：${avg}`;
             Object.assign(levelEl.style, baseStyle);
           }
 
@@ -250,7 +250,7 @@
               levelEl.className = "note-display";
               document.getElementById("happyChart").after(levelEl);
               }
-            levelEl.textContent = `うれしポイント：${sum}　うれしレベル：${avg}`;
+            levelEl.textContent = `うれしポイント：${Math.round(sum)}　うれしレベル：${avg}`;
             Object.assign(levelEl.style, baseStyle);
           }
           chart.update();
