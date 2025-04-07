@@ -172,6 +172,9 @@
               dragData: {
                 round: 1,
                 showTooltip: false,
+                  onDrag: (e, datasetIndex, index, value) => {
+                          return Math.max(0, value); 
+                            },
                 onDragEnd: (e, datasetIndex, index, value) => {
                   values[index] = value;
                   updateAll();
