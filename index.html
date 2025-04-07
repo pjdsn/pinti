@@ -201,7 +201,7 @@
         function updateAll() {
           const row = document.getElementById(rowId);
           values.forEach((val, i) => {
-            const display = (val - 1).toFixed(1);
+            const display = Math.round(val - 1);
             row.children[i].innerHTML = `${display}<br>`;
             const select = document.createElement("select");
             select.id = `${selectPrefix}${i}`;
