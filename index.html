@@ -154,7 +154,7 @@
         const chart = new Chart(ctx, {
           type: "radar",
           data: {
-            labels: emotionLabels.map((e, i) => `${e}: 0.0`),
+            labels: emotionLabels.map((e, i) => `${e}: 0`),
             datasets: [{
               label: "ぴんち度",
               data: values,
@@ -188,7 +188,7 @@
                 ticks: { display: false },
                 pointLabels: {
                   callback: function(_, index) {
-                    return `${emotionLabels[index]}: ${(values[index]-1).toFixed(1)}`;
+                    return `${emotionLabels[index]}: ${Math.round(values[index] - 1)}`;
                   },
                   font: { size: 14 },
                   padding: 10
