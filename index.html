@@ -219,6 +219,31 @@
             row.children[i].appendChild(select);
             chart.data.labels[i] = `${emotionLabels[i]}: ${display}`;
           });
+            const sum = values.reduce((a, b) => a + b, 0) - values.length;
+            const avg = (sum / values.length).toFixed(1);
+            let levelEl;
+
+            if (canvasId === "pinchChart") {
+              levelEl = document.getElementById("pinchLevelDisplay");
+              if (!levelEl) {
+                levelEl = document.createElement("div");
+                levelEl.id = "pinchLevelDisplay";
+                levelEl.className = "note-display";
+                document.getElementById("pinchChart").after(levelEl);
+              }
+              levelEl.textContent = `ぴんちポイント：${sum}　ぴんちレベル：${avg}`;
+            }
+
+            if (canvasId === "happyChart") {
+              levelEl = document.getElementById("happyLevelDisplay");
+              if (!levelEl) {
+                levelEl = document.createElement("div");
+                levelEl.id = "happyLevelDisplay";
+                levelEl.className = "note-display";
+                document.getElementById("happyChart").after(levelEl);
+              }
+               levelEl.textContent = `うれしポイント：${sum}　うれしレベル：${avg}`;
+            }
           chart.update();
         }
 
