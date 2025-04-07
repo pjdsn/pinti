@@ -220,7 +220,7 @@
             chart.data.labels[i] = `${emotionLabels[i]}: ${display}`;
           });
           const sum = values.reduce((a, b) => a + b, 0) - values.length;
-          const avg = (sum / values.length).toFixed(1);
+          const avg = Math.round(sum / values.length);
           let levelEl;
 
           const baseStyle = {
